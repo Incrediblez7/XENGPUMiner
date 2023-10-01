@@ -18,6 +18,9 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def index():
     data = request.get_json()
+    submit_block(data["key"])
+    return 200
+
 
 # Set up argument parser
 parser = argparse.ArgumentParser(description="Process optional account and worker arguments.")
