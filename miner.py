@@ -196,7 +196,9 @@ def submit_block(key):
                         super_blocks_count += 1
                     else:
                         normal_blocks_count += 1
-                    break
+            if response.status_code != 500:  # If status code is not 500, break the loop
+                print("Server Response:", response.json())
+                break
             retries += 1
             print(f"Retrying... ({retries}/{max_retries})")
             time.sleep(5)  # You can adjust the sleep time
