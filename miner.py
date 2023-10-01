@@ -252,8 +252,6 @@ if __name__ == "__main__":
     difficulty_thread = threading.Thread(target=update_memory_cost_periodically)
     difficulty_thread.daemon = True  # This makes the thread exit when the main program exits
     difficulty_thread.start()
-
-    print(f"Mining with: {account}")
     if(gpu_mode):
         print(f"Using GPU mode")
         print('Make sure you are running ./xengpuminer at the same time')
