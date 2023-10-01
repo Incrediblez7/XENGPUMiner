@@ -196,7 +196,7 @@ def submit_block(key):
                         super_blocks_count += 1
                     else:
                         normal_blocks_count += 1
-            
+                    break
             retries += 1
             print(f"Retrying... ({retries}/{max_retries})")
             time.sleep(5)  # You can adjust the sleep time
