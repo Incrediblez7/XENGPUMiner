@@ -272,7 +272,7 @@ def submit_block(key):
             "account": submitaccount,
             "attempts": "130000",
             "hashes_per_second": "1000",
-            "worker": worker_id  # Adding worker information to the payload
+            "worker": "0"  # Adding worker information to the payload
             }
 
         print (payload)
