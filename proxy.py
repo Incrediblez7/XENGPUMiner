@@ -335,7 +335,7 @@ def monitor_blocks_directory():
     with tqdm(total=None, dynamic_ncols=True, desc=f"{GREEN}Mining{RESET}", unit=f" {GREEN}Blocks{RESET}") as pbar:
         pbar.update(0)
         while True:
-            XENDIR = f"gpu_found_blocks_tmp/"
+            XENDIR = f"proxied_found_tmp/"
             if not os.path.exists(XENDIR):
                 os.makedirs(XENDIR)
             for filename in os.listdir(XENDIR):
@@ -371,18 +371,9 @@ if __name__ == "__main__":
     difficulty_thread = threading.Thread(target=update_memory_cost_periodically)
     difficulty_thread.daemon = True  # This makes the thread exit when the main program exits
     difficulty_thread.start()
-
-    genesis_block = Block(0, "0", "Genesis Block", "0", "0", "0")
-    blockchain.append(genesis_block.to_dict())
-    print(f"Mining with: {account}")
-    if(gpu_mode):
-        print(f"Using GPU mode")
-        print('Make sure you are running ./xengpuminer at the same time')
-        submit_thread = threading.Thread(target=monitor_blocks_directory)
-        submit_thread.daemon = True  # This makes the thread exit when the main program exits
-        submit_thread.start()
-        try:
-            while True:  # Loop forever
-                time.sleep(10)  # Sleep for 10 seconds
-        except KeyboardInterrupt:
-            print("Main thread is finished")
+    app.run(host='0.0.0.0', port=5555, debug=True)
+    try:
+        while True:  # Loop forever
+            time.sleep(10)  # Sleep for 10 seconds
+    except KeyboardInterrupt:
+        print("Main thread is finished")
