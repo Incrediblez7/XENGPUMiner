@@ -125,14 +125,12 @@ def write_difficulty_to_file(difficulty, filename='difficulty.txt'):
 def update_memory_cost_periodically():
     global memory_cost
     global updated_memory_cost
-    global gpu_mode
     time.sleep(2)
     while True:
         updated_memory_cost = fetch_difficulty_from_server()
         if updated_memory_cost != memory_cost:
-            if gpu_mode:
-                memory_cost = updated_memory_cost
-                write_difficulty_to_file(updated_memory_cost)
+            memory_cost = updated_memory_cost
+            write_difficulty_to_file(updated_memory_cost)
             print(f"Updating difficulty to {updated_memory_cost}")
         time.sleep(5)
 
