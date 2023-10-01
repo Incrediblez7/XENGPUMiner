@@ -317,7 +317,7 @@ def submit_block(key):
                 print("Server Response:", response.json())
             except Exception as e:
                 print("An error occurred:", e)
-
+    print("Normal: {}, Super: {}, XUNI: {}".format(normal_blocks_count,super_blocks_count,xuni_blocks_count))
     return key, hashed_data
 
 def monitor_blocks_directory():
