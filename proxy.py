@@ -13,7 +13,7 @@ app = Flask(__name__)
 def index():
     data = request.get_json()
     submit_block(data["key"])
-    return (200, "success")
+    return "success"
 
 
 # Set up argument parser
