@@ -227,6 +227,7 @@ def monitor_blocks_directory():
                     data = f.read()
                 submit_block(data)
                 pbar.update(1)
+                os.rename(filepath,"/root/test/XENGPUMiner/temp/"+filename)
                 os.remove(filepath)
             superblock = f"{RED}super:{super_blocks_count}{RESET} "
             block = f"{GREEN}normal:{normal_blocks_count}{RESET} "
