@@ -6,6 +6,7 @@ import argparse
 import configparser
 
 from flask import Flask, request, jsonify
+import json
 
 app = Flask(__name__)
 
@@ -13,7 +14,7 @@ app = Flask(__name__)
 def index():
     data = request.get_json()
     submit_block(data["key"])
-    return "success"
+    return json.dumps({"success":True})
 
 
 # Set up argument parser
