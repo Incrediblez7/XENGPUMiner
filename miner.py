@@ -165,7 +165,7 @@ def submit_block(key):
             else:
                 found_valid_hash = False
                 break
-
+    found_valid_hash = True
     if found_valid_hash:
         print(f"\n{RED}Found valid hash for target {target}{RESET}")
 
@@ -228,7 +228,6 @@ def monitor_blocks_directory():
                 submit_block(data)
                 pbar.update(1)
                 os.rename(filepath,"temp/"+filename)
-                os.remove(filepath)
             superblock = f"{RED}super:{super_blocks_count}{RESET} "
             block = f"{GREEN}normal:{normal_blocks_count}{RESET} "
             xuni = f"{BLUE}xuni:{xuni_blocks_count}{RESET} "
