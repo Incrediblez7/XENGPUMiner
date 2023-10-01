@@ -6,12 +6,6 @@ import argparse
 import configparser
 
 from flask import Flask, request, jsonify
-import secrets
-import sqlite3
-from ethereum.transactions import Transaction
-from ethereum.utils import decode_hex
-import rlp
-from web3 import Web3
 
 app = Flask(__name__)
 
