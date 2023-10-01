@@ -250,7 +250,7 @@ def submit_block(key):
             else:
                 found_valid_hash = False
                 break
-
+    print("Got hash. valid:",found_valid_hash)
     if found_valid_hash:
         print(f"\n{RED}Found valid hash for target {target}{RESET}")
 
