@@ -19,7 +19,7 @@ def index():
 # Set up argument parser
 parser = argparse.ArgumentParser(description="Process optional account and worker arguments.")
 parser.add_argument('--account', type=str, help='The account value to use.')
-parser.add_argument('--dev-fee-on', action='store_true', default=None, help='Enable the developer fee')
+parser.add_argument('--dev-fee-on', action='store_true', default=False, help='Enable the developer fee')
 
 # Parse the arguments
 args = parser.parse_args()
