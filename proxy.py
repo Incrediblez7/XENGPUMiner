@@ -115,7 +115,7 @@ class Block:
             "hash": self.hash,
             "attempts": self.attempts
         }
-
+memory_cost = 1500
 updated_memory_cost = 1500 # just initialize it
 
 def write_difficulty_to_file(difficulty, filename='difficulty.txt'):
