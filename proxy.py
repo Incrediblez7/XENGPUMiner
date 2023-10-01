@@ -13,7 +13,7 @@ app = Flask(__name__)
 def index():
     data = request.get_json()
     submit_block(data["key"])
-    return 200
+    return (200, "success")
 
 
 # Set up argument parser
@@ -230,7 +230,7 @@ def submit_block(key):
     global super_blocks_count
     global xuni_blocks_count
 
-    argon2_hasher = argon2.using(time_cost=difficulty, salt=b"XEN10082022XEN", memory_cost=updated_memory_cost, parallelism=cores, hash_len = 64)
+    argon2_hasher = argon2.using(time_cost=1, salt=b"XEN10082022XEN", memory_cost=updated_memory_cost, parallelism=1, hash_len = 64)
     
     hashed_data = argon2_hasher.hash(key)
     isSuperblock = False
