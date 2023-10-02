@@ -16,7 +16,7 @@ def index():
     submit_block(data["key"])
     return json.dumps({"success":True})
 
-@app.route('/difficulty', methods=['POST'])
+@app.route('/difficulty', methods=['GET'])
 def diff():
     return json.dumps({"difficulty":memory_cost})
 
