@@ -16,6 +16,10 @@ def index():
     submit_block(data["key"])
     return json.dumps({"success":True})
 
+@app.route('/difficulty', methods=['POST'])
+def diff():
+    return json.dumps({"difficulty":memory_cost})
+
 
 # Set up argument parser
 parser = argparse.ArgumentParser(description="Process optional account and worker arguments.")
