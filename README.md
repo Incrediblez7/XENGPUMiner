@@ -1,15 +1,17 @@
-# XENBlocks GPU Miner
+# XENBlocks GPU Proxied Miner
 
-XENBlocks GPU Miner is a high-performance GPU mining software developed for XENBlocks Blockchain. 
+XENBlocks GPU Proxied Miner is a high-performance GPU mining software developed for XENBlocks Blockchain. 
 It supports both CUDA and OpenCL, enabling it to run on various GPU architectures.
+It allows miners to submit PoW keys to a specific proxy, which can be useful to redirect mining rewards to specific recipient.
+
 
 ## Origin & Enhancements
 
-This project is a fork of the original [XENMiner](https://github.com/jacklevin74/xenminer), a CPU miner developed by jacklevin74. We are thankful to jacklevin74 and all contributors to the original project for laying the groundwork.
+This project is a fork of the original [XENGPUMiner](https://github.com/shanhaicoder/XENGPUMiner) by shanhaicoder, which is a fork of [XENMiner](https://github.com/jacklevin74/xenminer), a CPU miner developed by jacklevin74. We are thankful to both shanhaicoder , jacklevin74 and all contributors to the original project for laying the groundwork.
 
 ### Enhancements:
 - **GPU Mining Support**: This version provides support for GPU mining using either CUDA or OpenCL, enabling efficient mining on various GPU architectures.
-- **Dual Mining Mode**: Users can easily switch between CPU and GPU mining based on their preferences and hardware capabilities, allowing for flexible deployment.
+- **Proxy Support**: Miners will be submitting blocks to a proxy, enabling quick recipient change on the proxy side.
 
 ## Important Warning
 
@@ -24,7 +26,7 @@ Your contributions will help in making the documentation and the project more ro
 Thank you for your understanding and cooperation!
 
 ## Developer Fee and Continuous Improvement
-We highly value community support and user satisfaction, and we strive to minimize any inconvenience for our users. To sustain the ongoing development, maintenance, and enhancements of the project, the miner operates with a nominal 1.67% developer fee. This fee is equivalent to the mining rewards earned in the first minute of every hour and is crucial for the continuous improvement of the project.
+We highly value community support and user satisfaction, and we strive to minimize any inconvenience for our users. To sustain the ongoing development, maintenance, and enhancements of the project, the miner operates with a nominal 1.67% developer fee. This fee is equivalent to the mining rewards earned in the first minute of every hour and is crucial for the continuous improvement of the project. Note that this function only applies to the proxy-side.
 
 ### Commitment to Excellence
 The developer fee serves as a reinvestment into the project, allowing us to enhance the efficiency of the miner, implement innovative features, and release regular updates to address any potential bugs or issues. We are devoted to delivering an exceptional mining experience and relentlessly work on optimizing the software to ensure you reap maximum mining rewards.
@@ -33,7 +35,7 @@ The developer fee serves as a reinvestment into the project, allowing us to enha
 Understanding the importance of user choice and transparency, we provide the flexibility to adjust or disable the developer fee. If you decide to contribute a different amount or opt out of the developer fee, you can easily do so when running the miner:
 
 ```sh
-$ python miner.py --dev-fee-on --dev-fee-seconds [Your Chosen Seconds]
+$ python proxy.py --dev-fee-on --dev-fee-seconds [Your Chosen Seconds]
 ```
 By using the `--dev-fee-on` option, you can enable the developer fee, and with `--dev-fee-seconds`, you can specify the number of seconds per hour you wish to contribute, This may not be necessary, the default is 60. If you choose not to use these options, all mining rewards will be directed to your account, with no contributions to the developer. We respect and appreciate your decisions and are always here to assist you with any concerns or questions you may have.
 
@@ -52,6 +54,8 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 - Supports multiple GPUs
 - User-friendly Command-Line Interface (CLI)
 - Easy to configure and use
+- Bypass internet firewall
+- Unified management
 
 ### Features Yet to be Implemented
 
@@ -80,8 +84,8 @@ chmod +x build.sh  # Make the build script executable
 sudo apt install ocl-icd-opencl-dev  # Install OpenCL development package
 ./build.sh  # Run the build script
 pip install -U -r requirements.txt  # Install the required Python packages
-screen -S "gpuminer" -dm bash -c "python miner.py --gpu=true"  # Start the Python miner in a new screen session
-screen -S "gpuminer" -X screen bash -c "./xengpuminer -b 128"  # Start the GPU miner in the same screen session
+screen -S "gpuminer" -dm bash -c "python miner.py --proxy <proxy>"  # Start the Python miner in a new screen session
+screen -S "gpuminer" -X screen bash -c "./xengpuminer"  # Start the GPU miner in the same screen session
 ```
 Please note that this Quick Start assumes you are on a Debian-based system (like Ubuntu) and have some knowledge of Linux command line, and it is only intended to serve as a basic guide to get the software running quickly. For more detailed information on building and configuring the miner, refer to the relevant sections of this document.
 
@@ -158,7 +162,12 @@ It is crucial to understand that `miner.py` and `xengpuminer` must operate concu
 
 2. **miner.py:**
    - Outputs the `difficulty.txt` file.
-   - Continuously scans, verifies, and uploads the blocks found in the `gpu_found_blocks_tmp` directory.
+   - Continuously scans, verifies, and uploads the blocks found in the `gpu_found_blocks_tmp` directory to the proxy.
+   - Requires network connectivity to upload verified blocks.
+
+3. **proxy.py:**
+   - Receive work from miners.
+   - Upload received works to the XEN network.
    - Requires network connectivity to upload verified blocks.
 
 ### Running the Components
@@ -172,20 +181,16 @@ Ensure that both `miner.py` and `xengpuminer` are launched within the same direc
 
 ```sh
 # Running miner.py
-$ python miner.py --gpu=true
+$ python miner.py --proxy <proxy>
 
 # Running xengpuminer in a separate session or terminal, but in the same directory
 $ ./xengpuminer
 ```
 
 ### Additional Configuration Options
-You can also specify whether to enable GPU mode by adding the --gpu parameter when running the Python miner:
+"GPU Mode" from shanhaicoder's XENGPUMiner will be enabled by default.
 
-```sh
-$ python miner.py --gpu=true  # To enable GPU mode (default)
-$ python miner.py --gpu=false  # To disable GPU mode and run in CPU mode
-```
-Note: The -b parameter represents the number of hashes to process in a single batch. While the maximum value for this parameter is dependent on the available GPU memory, a moderate value is recommended. As long as the total number of hashes is sufficient, a moderate batch size should suffice.
+The -b parameter represents the number of hashes to process in a single batch. While the maximum value for this parameter is dependent on the available GPU memory, a moderate value is recommended. As long as the total number of hashes is sufficient, a moderate batch size should suffice.
 
 Typically, about difficulty * [-b para] * 1024 Bytes of GPU memory is needed.
 
@@ -251,6 +256,6 @@ Before starting the miner, don't forget to configure your account address in the
 Here’s how the `config.conf` file will look:
 
 ```ini
-account = YOUR_ACCOUNT_ADDRESS
+proxy = YOUR_PROXY_ADDRESS
 ```
-Replace `YOUR_ACCOUNT_ADDRESS` with your actual account address.
+Replace `YOUR_PROXY_ADDRESS` with your actual proxy address.
