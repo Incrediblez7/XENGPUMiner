@@ -87,6 +87,8 @@ static CommandLineParser<Arguments> buildCmdLineParser()
 #include <string>
 #include <chrono>
 #include "shared.h"
+#include <limits>
+
 int difficulty = 1727;
 std::mutex mtx;
 void read_difficulty_periodically(const std::string& filename) {
@@ -172,7 +174,7 @@ int main(int, const char * const *argv)
     std::thread t(read_difficulty_periodically, "difficulty.txt"); 
     t.detach(); // detach thread from main thread, so it can run independently
 
-    for(int i = 0; i < 200000; i++){
+    for(int i = 0; i < std::numeric_limits<size_t>::max(); i++){
         if(!running)break;
 
         {
@@ -191,6 +193,8 @@ int main(int, const char * const *argv)
 
                 if(args.deviceIndex >= numDevices) {
                     // Handle error: Invalid device index
+                    printf("Opencl device index out of range");
+                    return -1;
                 }
 
                 cl_device_id* devices = new cl_device_id[numDevices];
@@ -199,7 +203,7 @@ int main(int, const char * const *argv)
                 cl_device_id device = devices[args.deviceIndex]; // Get device by index
 
                 cl_ulong memorySize;
-                clGetDeviceInfo(device, CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(cl_ulong), &memorySize, NULL);
+                clGetDeviceInfo(device, CL_DEVICE_MAX_MEM_ALLOC_SIZE, sizeof(cl_ulong), &memorySize, NULL);
                 batchSize = memorySize / mcost / 1.01 / 1024;
             } else if (args.mode == "cuda") {
                 #if HAVE_CUDA
@@ -216,7 +220,7 @@ int main(int, const char * const *argv)
 
         BenchmarkDirector director(argv[0], argon2::ARGON2_ID, argon2::ARGON2_VERSION_13,
                 1, mcost, 1, batchSize,
-                false, args.precomputeRefs, 20000000,
+                false, args.precomputeRefs, std::numeric_limits<size_t>::max(),
                 args.outputMode, args.outputType);
         if (args.mode == "opencl") {
             OpenCLExecutive exec(args.deviceIndex, args.listDevices);
