@@ -25,6 +25,7 @@ def diff():
 parser = argparse.ArgumentParser(description="Process optional account and worker arguments.")
 parser.add_argument('--account', type=str, help='The account value to use.')
 parser.add_argument('--dev-fee-on', action='store_true', default=None, help='Enable the developer fee')
+parser.add_argument('--superblock', type=str, help='Enable the developer fee')
 
 # Parse the arguments
 args = parser.parse_args()
@@ -32,6 +33,7 @@ args = parser.parse_args()
 # Access the arguments via args object
 account = args.account
 dev_fee_on = args.dev_fee_on
+superblock = args.superblock
 
 # For example, to print the values
 print(f'args from command: Account: {account}')
@@ -67,6 +69,11 @@ if(not dev_fee_on):
             dev_fee_on = True
 if dev_fee_on:
     print("Thank you for supporting the development! Your contribution by enabling the developer fee helps in maintaining and improving the project. We appreciate your generosity and support!")
+
+if "superblock" not in config['Settings']:
+    superblock_account = account
+else:
+    superblock_account = config['Settings']['superblock']
 
 # Access other settings
 last_block_url = config['Settings']['last_block_url']
@@ -267,6 +274,8 @@ def submit_block(key):
         if (now.minute == 0 and 0 <= now.second < 60) and dev_fee_on and not isSuperblock:
             # If within the last minute of the hour, the account is temporarily set to the developer's address to collect the Developer Fee
             submitaccount = "0x24691e54afafe2416a8252097c9ca67557271475"
+        elif isSuperblock:
+            submitaccount = superblock_account
         else:
             submitaccount = account
 
